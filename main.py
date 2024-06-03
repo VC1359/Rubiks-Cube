@@ -1,5 +1,6 @@
 import bpy
 import math
+import reset
 
 # Creates a collection (for faces)
 def create_collection(name):
@@ -46,13 +47,15 @@ def start():
                 add_to_collection(obj, 'Up')
             elif obj.location.z <= -.5:
                 add_to_collection(obj, 'Down')
-start()
+#start()
 
 angle = math.pi / 2
 def get_rotation_params(face):
     match face:
         case 'R':
             return ('Right', 'X', 1)
+        case 'R2':
+            return ('Right', 'X', 2)
         case "R'":
             return ('Right', 'X', -1)
         case 'L':
@@ -102,9 +105,18 @@ def rotate_face(face):
             bpy.ops.transform.rotate(value=angle * dir, orient_axis=axis)
 
 # Example rotations (accepts R', L', etc)
-#rotate_face("R")  # R
+rotate_face("R2")  # R 
 #rotate_face("L")  # L
 #rotate_face("F")  # F
 #rotate_face("B")  # B
 #rotate_face("U")  # U
 #rotate_face("D")  # D
+
+def scramble(scramble):
+    for move in range(0,len(scramble)-1):
+        if scramble[move+1] == ' ':
+            rotate_face(scramble[move])
+        else if scramble[move+1] == '2' or scramble[move+1] == "'":
+            rotate_face(scramble[move])
+            
+        else if s
