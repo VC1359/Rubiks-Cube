@@ -1,4 +1,3 @@
-
 cross = {
 
 }
@@ -81,21 +80,12 @@ pll = {
     },
 }
 
-algorithm = pll["2PLL"]["H"].replace(" ", '')
+test = pll["2PLL"]["H"].replace(" ", '')
 moves = ["F", "B", "L", "R", "U", "D", "f", "r", "d", "M"]
 
-def do_algorithm(algorithm):
-    for move in range(0, len(algorithm)):
-        if algorithm[move] in moves:
-            if move+1 < len(algorithm) and algorithm[move+1] not in moves:
-                print(algorithm[move] + algorithm[move+1])
-            else: print(algorithm[move])
-
-# def test():
-#     for alg in range(1, 42):
-#        print(alg)
-#        algorithm = f2l["easy"][str(alg)]
-#        do_algorithm(algorithm)
-#        print('\n')
-
-# test()
+def print_algorithm(test):
+    for i in range(0, len(test)):
+        if test[i] in moves:
+            if i+1 < len(test) and test[i+1] not in moves:
+                print(test[i] + test[i+1])
+            else: print(test[i])

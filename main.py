@@ -1,5 +1,17 @@
 import bpy
 import math
+import sys
+import pathlib
+
+#Lets us import from our files (not sure what it does, or if needed?)
+#path = pathlib.Path(bpy.data.filepath)
+#myProjects_dir = path.parent.resolve() 
+#myProjects_dir = str(myProjects_dir) 
+#if not myProjects_dir in sys.path:
+#    sys.path.append(myProjects_dir)
+
+#__package__ = "Rubiks-Cube"
+#import algs_CFOP
 
 # Creates a collection (for faces)
 def create_collection(name):
@@ -26,10 +38,7 @@ def define_collections():
     create_collection('Side')
     create_collection('Equator')
 
-
-# Manual Init
-def start():
-    define_collections()
+def make_groups():
     # Group the cubes into collections
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -45,22 +54,20 @@ def start():
                 add_to_collection(obj, 'Up')
             elif obj.location.z <= -.5:
                 add_to_collection(obj, 'Down')
+                
+            if obj.location.x < .1 and obj.location.x > -.1:
+                add_to_collection(obj, 'Middle')
+            if obj.location.y < .1 and obj.location.y > -.1:
+                add_to_collection(obj, 'Side')
+            if obj.location.z < .1 and obj.location.z > -.1:
+                add_to_collection(obj, 'Equator')
 
-# Function needs to be finished           
-def scramble(scramble): # Input should look like "D2 R' F" 
-    pass
-#    for move in range(0,len(scramble)-1):
-#        if scramble[move+1] == ' ':
-#            rotate_face(scramble[move])
-#        else if scramble[move+1] == '2' or scramble[move+1] == "'":
-#            rotate_face(scramble[move])
-#            
-#        else if s
-
-def reset_collections():
-    for collection in bpy.context.scene.collection.children:
-        if collection != bpy.data.collections.get('Solved_State'):
-            bpy.data.collections.remove(collection)
+#remove objs from collection and remake them
+def reset_test():
+    for i in range (0,26):
+        obj = bpy.data.objects[i]
+        bpy.context.scene.collection.objects.unlink(obj)
+#    make_groups()
 
 angle = math.pi / 2
 def get_rotation_params(face):
@@ -132,6 +139,29 @@ def rotate_face(face):
             for obj in collection.objects:
                 obj.select_set(True)
             bpy.ops.transform.rotate(value=angle * dir, orient_axis=axis)
-    reset_collections()
 
-start()
+moves = ["F", "B", "L", "R", "U", "D", "f", "r", "d", "M"]
+def do_algorithm(alg):
+    alg.replace(" ", '')
+    length = len(alg)
+    for i in range(0, length):
+        if alg[i] in moves:
+            if i+1 < length and alg[i+1] not in moves:
+                rotate_face(alg[i] + alg[i+1])
+            else: rotate_face(alg[i])
+
+#def test_scramble():
+#    remake_groups()
+#    do_algorithm("L D2 L U' L' B' R'")
+#    
+#def test_unscramble():
+#    remake_groups()
+#    do_algorithm("R B L U L' D2 L'")
+
+define_collections()
+make_groups()
+rotate_face("R")
+reset_test()
+rotate_face("D")
+#test_scramble()
+#test_unscramble()
