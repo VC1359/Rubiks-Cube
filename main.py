@@ -40,7 +40,6 @@ def find_cubes(face):
 
 angle = math.pi / 2
 def get_rotation_params(face):
-    if face == 'L': print("wtf?")
     match face:
         case 'R':
             return ('Right', 'X', 1)
@@ -49,7 +48,6 @@ def get_rotation_params(face):
         case "R'":
             return ('Right', 'X', -1)
         case 'L':
-            print("here")
             return ('Left', 'X', -1)
         case 'L2':
             return ('Left', 'X', -2)
@@ -76,7 +74,6 @@ def get_rotation_params(face):
         case 'D':
             return ('Down', 'Z', -1)
         case 'D2':
-            print("here2")
             return ('Down', 'Z', -2)
         case "D'":
             return ('Down', 'Z', 1)
@@ -108,6 +105,7 @@ def rotate_face(face):
         find_cubes(group_name)
         bpy.context.view_layer.objects.active = None
         bpy.ops.transform.rotate(value=angle * dir, orient_axis=axis)
+        bpy.ops.anim.keyframe_insert_by_name(type="BUILTIN_KSI_LocRot")
 
 moves = ["F", "B", "L", "R", "U", "D", "f", "r", "d", "M"]
 def do_algorithm(alg):
@@ -119,11 +117,7 @@ def do_algorithm(alg):
                 rotate_face(alg[i] + alg[i+1])
             else: rotate_face(str(alg[i]))
 
-def test_scramble():
-    do_algorithm("L D2 L U' L' B' R'")
-    
-def test_unscramble():
-    do_algorithm("R B L U L' D2 L'")
-
-test_scramble()
-#test_unscramble()
+def scramble():
+    do_algorithm("L")# D2 L U' L' B' R'")
+    #do_algorithm("R B L U L' D2 L'") #unscramble
+scramble()

@@ -1,12 +1,18 @@
 import bpy
+import math
 
-def reset():
-#    bpy.context.view_layer.objects.active = None
-#    bpy.ops.object.select_all(action='DESELECT')
-    for collection in bpy.context.scene.collection.children:
-        if collection != bpy.data.collections.get('Solved_State'):
-            bpy.data.collections.remove(collection)
-reset()
+def reset_cube():
+    c = 1
+    for i in range(1,27):
+        if i == 14: c -= 1 # Cube 14 is 'real' center (shift over one)
+        for obj in bpy.data.objects:
+            if obj.name == str(i):
+                obj.rotation_euler = (0,0,0)
+                x = (i-c)%3 - 1
+                y = -1 * math.floor(((i-c)%9)/3) + 1
+                z = -1 * math.floor((i-c)/9) + 1
+                obj.location = (x,y,z)
+reset_cube()
 
 # Creates a collection (for faces)
 def create_collection(name):
