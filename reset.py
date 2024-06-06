@@ -7,11 +7,15 @@ def reset_cube():
         if i == 14: c -= 1 # Cube 14 is 'real' center (shift over one)
         for obj in bpy.data.objects:
             if obj.name == str(i):
+                obj.select_set(True)
+                bpy.ops.anim.keyframe_clear_v3d()
+                bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
                 obj.rotation_euler = (0,0,0)
                 x = (i-c)%3 - 1
                 y = -1 * math.floor(((i-c)%9)/3) + 1
                 z = -1 * math.floor((i-c)/9) + 1
                 obj.location = (x,y,z)
+    bpy.context.view_layer.objects.active = None
 reset_cube()
 
 # Creates a collection (for faces)
