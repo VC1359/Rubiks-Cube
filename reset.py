@@ -15,6 +15,7 @@ def reset_cube():
                 y = -1 * math.floor(((i-c)%9)/3) + 1
                 z = -1 * math.floor((i-c)/9) + 1
                 obj.location = (x,y,z)
+                continue
     bpy.context.view_layer.objects.active = None
 reset_cube()
 

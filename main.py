@@ -116,9 +116,9 @@ def rotate_face(face):
         group_name, axis, dir = rotation_params
         find_cubes(group_name)
         
-        animate(group_name,1)
+#        animate(group_name,1)
         bpy.ops.transform.rotate(value=angle * dir, orient_axis=axis)
-        animate(group_name,2)
+#        animate(group_name,2)
         bpy.context.view_layer.objects.active = None
 
 moves = ["F", "B", "L", "R", "U", "D", "f", "r", "d", "M"]
