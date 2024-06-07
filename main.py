@@ -133,7 +133,7 @@ def do_algorithm(alg):
 
 def scramble():
     bpy.context.scene.frame_current = 1
-    do_algorithm("M")
-#    do_algorithm("L D2 L U' L' B' R'")
-#    do_algorithm("R B L U L' D2 L'") #unscramble
+    #do_algorithm("M")
+    #do_algorithm("L D2 L U' L' B' R'")
+    do_algorithm("R B L U L' D2 L'") #unscramble
 scramble()
