@@ -97,28 +97,13 @@ def get_rotation_params(face):
             return ('Down', 'Z', 1)
     return None
 
-
-def animate(face, step):
-    if step == 1:
-        bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-        bpy.ops.anim.keyframe_insert_by_name(type="BUILTIN_KSI_LocRot")
-    if step == 2:
-        bpy.context.scene.frame_current += 15
-#        bpy.ops.anim.change_frame(current_frame)
-        bpy.ops.anim.keyframe_insert_by_name(type="BUILTIN_KSI_LocRot")
-        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
-        pass
-
 # Function to rotate a face
 def rotate_face(face):
     rotation_params = get_rotation_params(face)
     if rotation_params:
         group_name, axis, dir = rotation_params
         find_cubes(group_name)
-        
-#        animate(group_name,1)
         bpy.ops.transform.rotate(value=angle * dir, orient_axis=axis)
-#        animate(group_name,2)
         bpy.context.view_layer.objects.active = None
 
 moves = ["F", "B", "L", "R", "U", "D", "f", "r", "d", "M"]
@@ -129,11 +114,10 @@ def do_algorithm(alg):
         if alg[i] in moves:
             if i+1 < length and alg[i+1] not in moves:
                 rotate_face(alg[i] + alg[i+1])
-            else: rotate_face(str(alg[i]))
+            else: rotate_face(alg[i])
 
 def scramble():
-    bpy.context.scene.frame_current = 1
-    #do_algorithm("M")
-    #do_algorithm("L D2 L U' L' B' R'")
-    do_algorithm("R B L U L' D2 L'") #unscramble
+    bpy.context.scene.frame_current = 0
+    do_algorithm("L D2 L U' L' B' R'")
+    #do_algorithm("R B L U L' D2 L'") #unscramble
 scramble()

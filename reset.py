@@ -6,17 +6,14 @@ def reset_cube():
     for i in range(1,27):
         if i == 14: c -= 1 # Cube 14 is 'real' center (shift over one)
         for obj in bpy.data.objects:
+            obj.select_set(True)
+            bpy.ops.anim.keyframe_clear_v3d()
             if obj.name == str(i):
-                obj.select_set(True)
-                bpy.ops.anim.keyframe_clear_v3d()
-                
-                bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
                 obj.rotation_euler = (0,0,0)
                 x = (i-c)%3 - 1
                 y = -1 * math.floor(((i-c)%9)/3) + 1
                 z = -1 * math.floor((i-c)/9) + 1
                 obj.location = (x,y,z)
-                
                 for con in obj.constraints:
                     con.influence = 0
                 continue
