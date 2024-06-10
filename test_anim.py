@@ -2,39 +2,42 @@ import bpy
 import math
 import mathutils
 
-# Gives the cube global coordinates
-def restore_coords(cube):
-    cube.select_set(True)
-    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
-    cube.select_set(False)
-
 # Group the cubes to be rotated 
 def find_and_select_cubes(face):
+    selected_cubes = []
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
-            restore_coords(obj)
+            
+            # Gives the cube global coordinates
+            obj.select_set(True)
+            bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+            
             if face == 'Right' and obj.location.x >= .5:
-                obj.select_set(True) #Right
+                selected_cubes.append(obj) #Right
             if face == 'Left' and obj.location.x <= -.5:
-                obj.select_set(True) #Left
+                selected_cubes.append(obj) #Left
             if face == 'Back' and obj.location.y >= .5:
-                obj.select_set(True) #Back
+                selected_cubes.append(obj) #Back
             if face == 'Front' and obj.location.y <= -.5:
-                obj.select_set(True) #Front
+                selected_cubes.append(obj) #Front
             if face == 'Up' and obj.location.z >= .5:
-                obj.select_set(True) #Up
+                selected_cubes.append(obj) #Up
             if face == 'Down' and obj.location.z <= -.5:
-                obj.select_set(True) #Down
+                selected_cubes.append(obj) #Down
                 
             if face == 'Middle' and obj.location.x < .1 and obj.location.x > -.1:
-                obj.select_set(True) #Middle
+                selected_cubes.append(obj) #Middle
             if face == 'Side' and obj.location.y < .1 and obj.location.y > -.1:
-                obj.select_set(True) #Side
+                selected_cubes.append(obj) #Side
             if face == 'Equator' and obj.location.z < .1 and obj.location.z > -.1:
-                obj.select_set(True) #Equator
+                selected_cubes.append(obj) #Equator
 
+    # Restores cube center to origin
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+    bpy.ops.object.select_all(action='DESELECT')
+    for cube in selected_cubes:
+        cube.select_set(True)
 
 # Returns [where to find the cubes, axis of rotation, direction of rotation]
 def get_rotation_params(notation):
@@ -132,7 +135,6 @@ def anim_alg(alg):
 
 def anim_scramble():
     bpy.context.scene.frame_current = 0
-    anim_alg("L D2")# L U' L' B' R'")
-    #anim_alg("R B L U L' D2 L'") #unscramble
-        
+    anim_alg("L D2 L U' L' B' R'") #scramble
+    anim_alg("R B L U L' D2 L'") #unscramble
 anim_scramble()
