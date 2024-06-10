@@ -30,7 +30,8 @@ f2l = {
         "21": "U2 R U R' U R U' R'",
         "22": "U2 F' U' F U' F' U F",
         "23": "R U R' U' U' R U R' U' R U R'",
-        "24": "y' R' U' R U U R' U' R U R' U' R", #y!?
+        #"24": "y' R' U' R U U R' U' R U R' U' R", #Original alg with y'
+        "24": "F' U' F U2 F' U' F U F' U' F", #Transcription of the above without y'
         #corner bottom and ege top
         "25": "U' F' U F U R U' R'",
         "26": "U R U' R' U' F' U F",
