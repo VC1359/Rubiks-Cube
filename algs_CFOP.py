@@ -1,3 +1,4 @@
+# Force yellow daisy
 cross = {
 
 }
@@ -81,13 +82,8 @@ pll = {
     },
 }
 
-test = pll["2PLL"]["H"].replace(" ", '')
-moves = ["F", "B", "L", "R", "U", "D", "f", "r", "d", "M"]
-def print_algorithm(alg):
-    alg = alg.replace(" ", '')
-    for i in range(0, len(alg)):
-        if alg[i] in moves:
-            if i+1 < len(alg) and alg[i+1] not in moves:
-                print(alg[i] + alg[i+1])
-            else: print(alg[i])                 
-#print_algorithm(test)
+def alg_extraction(piece, alg):
+    if piece.ort != 'F':
+        #2alg = alg.replace("")
+        pass
+    else: return alg
