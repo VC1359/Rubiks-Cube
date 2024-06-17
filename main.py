@@ -189,57 +189,48 @@ def get_faces_from_normals(normals):
                 break
     return faces
 
+# Rotates the normal by the object's quaternion
+def rotate_normal(normal, quat):
+    normal_vector = mathutils.Vector(normal)
+    rotated_normal = quat @ normal_vector
+    return rotated_normal
+
 # Returns a list of normals of the colored faces given the indexed list of materials
 def get_piece_face_from_normals(obj, mat_id_list):
     normals = []
-    if mat_id_list == 1:
-        for poly in obj.data.polygons:
-            if poly.material_index == mat_id_list:
-                normals.append(clean_vector(poly.normal))
-        return get_faces_from_normals(normals)
-        
-    for i in range(0, len(mat_id_list)):
-        for poly in obj.data.polygons:
-            if poly.material_index == mat_id_list[i]:
-                normals.append(clean_vector(poly.normal))
-                break
+    for poly in obj.data.polygons:
+        if poly.material_index in mat_id_list:
+            normal = rotate_normal(poly.normal, obj.rotation_quaternion)
+            normals.append(clean_vector(normal))
     return get_faces_from_normals(normals)
                 
 # Creates piece objects for each type of piece            
 def get_data():
     current_state = []
+    edge_pieces = ["2", "4", "6", "8", "10", "12", "15", "17", "19", "21", "23", "25"]
+    corner_pieces = ["1", "3", "7", "9", "18", "20", "24", "26"]
+
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
-            if obj.name in ["2", "4", "6", "8", "10", "12", "15", "17", "19", "21", "23", "25"]:
-                faces = get_piece_face_from_normals(obj, (1,2))
-                piece = stage_interpreter.edge_p(obj.name, faces[0], (obj.material_slots[1].name[0], obj.material_slots[2].name[0]), faces)
-                current_state.append(piece)
-                continue
-            elif obj.name in ["1", "3", "7", "9", "18", "20", "24", "26"]:
-                faces = get_piece_face_from_normals(obj, (1,2,3))
-                piece = stage_interpreter.corner_p(obj.name, faces[0], (obj.material_slots[1].name[0], obj.material_slots[2].name[0], obj.material_slots[3].name[0]), faces)
-                current_state.append(piece)
-                continue
-            else: 
-                faces = get_piece_face_from_normals(obj, (1))
-                piece = stage_interpreter.center_p(obj.name, faces[0], (obj.material_slots[1].name[0]), faces)
-                current_state.append(piece)
-                continue
+            mat_ids = (1,) if obj.name not in edge_pieces and obj.name not in corner_pieces else (1, 2, 3)[:len(obj.material_slots)]
+            faces = get_piece_face_from_normals(obj, mat_ids)
+            materials = tuple(slot.name[0] for slot in obj.material_slots)
+
+            if obj.name in edge_pieces:
+                piece = stage_interpreter.edge_p(obj.name, faces[0], materials, faces)
+            elif obj.name in corner_pieces:
+                piece = stage_interpreter.corner_p(obj.name, faces[0], materials, faces)
+            else:
+                piece = stage_interpreter.center_p(obj.name, faces[0], materials, faces)
+
+            current_state.append(piece)
+
     return current_state
 
 
 def start(alg, animate=False):
     bpy.context.scene.frame_current = 0
     state = get_data()
-    for cube in state:
-        print(cube.name, cube.faces)
-
     do_algorithm(alg, animate)
-    print()
-
-    state2 = get_data()
-    for cube in state2:
-        print(cube.name, cube.faces)
-
 #start("L D2 L U' L' B' R'") #scramble
 start("R B L U L' D2 L'") #unscramble
