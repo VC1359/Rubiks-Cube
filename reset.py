@@ -11,7 +11,7 @@ def reset_cube():
             bpy.ops.anim.keyframe_clear_v3d()
             bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
             if obj.name == str(i):
-#                obj.rotation_euler = (0,0,0)
+                obj.rotation_quaternion = (1,0,0,0)
                 x = (i-c)%3 - 1
                 y = -1 * math.floor(((i-c)%9)/3) + 1
                 z = -1 * math.floor((i-c)/9) + 1
